@@ -154,6 +154,26 @@
     font-weight: 700;
   }
 
+  .music-toggle {
+    margin-top: 22px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--cream);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .music-toggle:hover {
+    background: rgba(255,255,255,0.24);
+  }
+  .music-toggle:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
   footer {
     position: relative;
     z-index: 2;
@@ -202,6 +222,11 @@
     </div>
 
     <div class="message" id="message">until the gates open</div>
+
+    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
+      <span id="musicIcon">🔇</span> <span id="musicLabel">play music</span>
+    </button>
+    <audio id="bgMusic" src="music.mp3" loop preload="none"></audio>
   </div>
 
   <footer>made for the happiest countdown on earth</footer>
@@ -251,6 +276,32 @@
 
       tick();
       setInterval(tick, 1000);
+
+      // --- Plays a user-supplied audio file (music.mp3) sitting next to this page ---
+      var bgMusic = document.getElementById('bgMusic');
+      var toggleBtn = document.getElementById('musicToggle');
+      var musicIcon = document.getElementById('musicIcon');
+      var musicLabel = document.getElementById('musicLabel');
+      var playing = false;
+
+      toggleBtn.addEventListener('click', function () {
+        if (!playing) {
+          bgMusic.play().then(function () {
+            playing = true;
+            toggleBtn.setAttribute('aria-pressed', 'true');
+            musicIcon.textContent = '🔊';
+            musicLabel.textContent = 'pause music';
+          }).catch(function () {
+            musicLabel.textContent = 'add music.mp3 to play';
+          });
+        } else {
+          bgMusic.pause();
+          playing = false;
+          toggleBtn.setAttribute('aria-pressed', 'false');
+          musicIcon.textContent = '🔇';
+          musicLabel.textContent = 'play music';
+        }
+      });
     })();
   </script>
 </body>
